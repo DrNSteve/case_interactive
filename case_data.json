@@ -1,0 +1,131 @@
+{
+  "disclaimer": "This clinical simulation was developed with the assistance of Google Gemini.",
+  "masterLabData": {
+    "ua": {
+      "name": "Complete Urinalysis with Microscopy",
+      "results": [
+        { "test": "Color", "value": "Yellow", "ref": "" },
+        { "test": "Clarity", "value": "Cloudy", "ref": "Clear" },
+        { "test": "Specific Gravity", "value": "1.022", "ref": "1.005-1.030" },
+        { "test": "pH", "value": "6.5", "ref": "5.0-8.0" },
+        { "test": "Leukocyte Esterase", "value": "Positive", "ref": "Negative", "flag": "high" },
+        { "test": "Nitrite", "value": "Positive", "ref": "Negative", "flag": "high" },
+        { "test": "Protein", "value": "Negative", "ref": "Negative" },
+        { "test": "Glucose", "value": "Negative", "ref": "Negative" },
+        { "test": "Blood", "value": "Trace", "ref": "Negative" },
+        { "test": "WBCs (Microscopic)", "value": "15-20 /hpf", "ref": "0-5 /hpf", "flag": "high" },
+        { "test": "RBCs (Microscopic)", "value": "0-2 /hpf", "ref": "0-4 /hpf" },
+        { "test": "Bacteria (Microscopic)", "value": "Many", "ref": "None", "flag": "high" }
+      ]
+    },
+    "hcg": { "name": "Urine hCG", "results": [{ "test": "Pregnancy Test", "value": "Negative", "ref": "Negative" }] },
+    "cbc": { "name": "Complete Blood Count (CBC)", "results": [{ "test": "WBC Count", "value": "8.2 x10^9/L", "ref": "4.0-11.0 x10^9/L" }, { "test": "Hemoglobin", "value": "13.1 g/dL", "ref": "12.0-16.0 g/dL" }, { "test": "Platelets", "value": "250 x10^9/L", "ref": "150-450 x10^9/L" }] },
+    "cmp": { "name": "Comprehensive Metabolic Panel (CMP)", "results": [{ "test": "Sodium", "value": "138 mmol/L", "ref": "136-145 mmol/L" }, { "test": "Potassium", "value": "4.1 mmol/L", "ref": "3.5-5.1 mmol/L" }, { "test": "Creatinine", "value": "0.8 mg/dL", "ref": "0.6-1.2 mg/dL" }] },
+    "renal_us": { "name": "Renal Ultrasound", "results": [{ "test": "Findings", "value": "Bilateral kidneys are normal in size, shape, and echotexture. No evidence of hydronephrosis, calculi, or masses.", "ref": "" }] }
+  },
+  "scenes": {
+    "start": {
+      "title": "Patient Presentation",
+      "narrative": "Susan, a 42-year-old female, presents to your clinic with a chief complaint of painful and frequent urination that started two days ago.",
+      "onSubmit": "gather_history"
+    },
+    "gather_history": {
+      "title": "History of Present Illness",
+      "isSataScreen": true,
+      "narrative": "You begin to take a more detailed history. Select all the questions you would like to ask Susan to better understand her symptoms.",
+      "sataOptions": {
+        "onset": { "label": "When did the symptoms begin?", "finding": "The burning and frequency started two days ago." },
+        "location": { "label": "Where exactly is the discomfort located?", "finding": "She points to her lower abdomen, stating she has mild suprapubic pain." },
+        "characteristics": { "label": "Can you describe the pain?", "finding": "She describes it as a 'burning' pain when she urinates." },
+        "red_flags": { "label": "Have you experienced any fever, chills, nausea, or back pain?", "finding": "She denies any fever, chills, nausea, or back pain." },
+        "associated_sx": { "label": "Have you noticed any blood in your urine, vaginal discharge, or foul odor?", "finding": "She denies seeing blood and denies any vaginal itching, foul odor, or discharge." },
+        "social_hx": { "label": "Any new sexual partners recently?", "finding": "She notes one new male sexual partner within the last week." }
+      },
+      "onSubmit": "post_history_decision"
+    },
+    "post_history_decision": {
+      "title": "Next Steps",
+      "narrative": "You have gathered the initial history.",
+      "decision": { "prompt": "What would you like to do next?", "choices": [{ "text": "Ask more questions.", "path": "gather_history" }, { "text": "Conduct a physical exam.", "path": "physical_exam_selection" }, { "text": "Order diagnostic tests.", "path": "prompt_to_order" }] }
+    },
+    "physical_exam_selection": {
+      "title": "Physical Examination",
+      "isSataScreen": true,
+      "narrative": "Select the components of the physical exam you wish to perform.",
+      "sataOptions": {
+        "vitals": { "label": "Check Vital Signs", "finding": "Vital signs are within normal limits: T: 98.6°F, BP: 116/74, HR: 64, RR: 14." },
+        "abdominal": { "label": "Abdominal Assessment", "finding": "Abdomen is soft, non-tender, and non-distended. There is mild suprapubic tenderness on deep palpation." },
+        "cvat": { "label": "Assess for CVA Tenderness", "finding": "There is no costovertebral angle (CVA) tenderness bilaterally." },
+        "cardiac": { "label": "Cardiac Exam", "finding": "Regular rate and rhythm, S1/S2 heard, no murmurs." },
+        "respiratory": { "label": "Respiratory Exam", "finding": "Lungs are clear to auscultation bilaterally." }
+      },
+      "onSubmit": "post_exam_decision"
+    },
+    "post_exam_decision": {
+      "title": "Next Steps",
+      "narrative": "You have completed the physical exam.",
+      "decision": { "prompt": "What would you like to do next?", "choices": [{ "text": "Perform additional physical assessment.", "path": "physical_exam_selection" }, { "text": "Order diagnostic tests.", "path": "prompt_to_order" }] }
+    },
+    "prompt_to_order": {
+      "title": "Place Orders",
+      "narrative": "You have decided to order diagnostic tests. Please navigate to the 'Orders' tab to place the appropriate orders for this patient.",
+      "onEnter": "enableOrders"
+    },
+    "decision_labs": {
+      "title": "Placing Orders",
+      "isOrderScreen": true,
+      "narrative": "Select the diagnostic tests for Susan's presentation.",
+      "orderSets": {
+        "Urine Studies": [{ "id": "ua", "label": "Urinalysis with Reflex to Culture" }, { "id": "hcg", "label": "Urine hCG" }],
+        "Blood Studies": [{ "id": "cbc", "label": "Complete Blood Count (CBC)" }, { "id": "cmp", "label": "Comprehensive Metabolic Panel (CMP)" }],
+        "Imaging": [{ "id": "renal_us", "label": "Renal Ultrasound" }]
+      },
+      "onSubmit": "results_pending"
+    },
+    "results_pending": {
+      "title": "Results Pending",
+      "narrative": "The orders have been placed. Results are now available.",
+      "onEnter": "populateResults",
+      "decision": {
+        "prompt": "Lab results are now available. Please review them in the 'Lab Results' tab and then select your leading diagnosis.",
+        "choices": [{ "text": "Proceed to select Differential Diagnosis.", "path": "select_ddx" }]
+      }
+    },
+    "select_ddx": {
+      "title": "Differential Diagnosis",
+      "isDdxScreen": true,
+      "prompt": "Based on the history, physical exam, and lab results, select the most likely diagnosis.",
+      "ddxOptions": ["Acute simple cystitis", "Complicated Cystitis", "Pyelonephritis", "Pregnancy", "Sexually Transmitted Infection (STI)"],
+      "correctAnswer": "Acute simple cystitis",
+      "onSubmit": "patho_q1"
+    },
+    "patho_q1": {
+      "title": "Pathophysiology Question 1",
+      "narrative": "You have correctly identified the diagnosis as Acute Simple Cystitis. Now, let's explore the underlying pathophysiology.",
+      "decision": { "prompt": "Which of the following is the most common cause of acute simple cystitis?", "choices": [{ "text": "An ascending infection from fecal flora, typically E. coli.", "path": "patho_q2", "isCorrect": true }, { "text": "A hematogenous (bloodborne) spread of bacteria to the bladder.", "path": "patho_q2" }, { "text": "An autoimmune inflammatory response in the bladder wall.", "path": "patho_q2" }] }
+    },
+    "patho_q2": {
+      "title": "Pathophysiology Question 2",
+      "narrative": "Correct. The vast majority of UTIs are caused by ascending bacteria.",
+      "decision": { "prompt": "The patient's symptoms of urinary frequency and urgency are primarily caused by what physiological response?", "choices": [{ "text": "Inflammation of the bladder wall irritating stretch receptors, creating a false sensation of fullness.", "path": "complication_q1", "isCorrect": true }, { "text": "Increased urine production by the kidneys in response to the infection.", "path": "complication_q1" }, { "text": "Bacterial toxins directly stimulating the bladder's detrusor muscle to contract.", "path": "complication_q1" }] }
+    },
+    "complication_q1": {
+      "title": "Complications",
+      "narrative": "Excellent. The symptoms are a direct result of the local inflammatory response.",
+      "decision": { "prompt": "If left untreated, an ascending infection from cystitis can lead to which of the following serious complications?", "choices": [{ "text": "Pyelonephritis", "path": "culture_q1", "isCorrect": true }, { "text": "Acute Kidney Injury (AKI)", "path": "culture_q1" }, { "text": "Glomerulonephritis", "path": "culture_q1" }] }
+    },
+    "culture_q1": {
+      "title": "Culture Results",
+      "narrative": "<div style=\"background-color: #e6f7ff; border-left: 4px solid #0073b3; padding: 10px; margin-bottom: 15px; border-radius: 4px;\"><strong>New Result:</strong> Urine Culture (from reflex)<br><strong>Organism:</strong> <em>E. coli</em><br><strong>Colony Count:</strong> >100,000 CFU/mL</div>",
+      "decision": { "prompt": "How does this definitive result primarily influence your clinical assessment?", "choices": [{ "text": "It confirms the diagnosis and validates the initial clinical judgment.", "path": "end", "isCorrect": true }, { "text": "It indicates a need to immediately change to a stronger, IV antibiotic.", "path": "end" }, { "text": "It suggests the infection is now complicated and requires hospitalization.", "path": "end" }] }
+    },
+    "end": { "isEnd": true, "title": "Case Complete: Final Feedback" }
+  },
+  "rationales": {
+    "select_ddx": "<p><strong>Diagnosis: Acute Simple Cystitis.</strong> This is the correct diagnosis because the patient's signs and symptoms are localized to the lower urinary tract, and there are no signs of systemic infection or complicating factors.</p><ul><li><strong>Supporting Evidence:</strong> Dysuria (painful urination), frequency, urgency, and suprapubic pain.</li><li><strong>Key Differentiator:</strong> The absence of fever, chills, flank pain, and CVA tenderness makes pyelonephritis (a kidney infection) much less likely. The positive urinalysis points towards an infection rather than a chronic condition like interstitial cystitis.</li></ul>",
+    "patho_q1": "<p><strong>Pathogenesis: Ascending Infection.</strong> The primary mechanism for nearly all cases of cystitis is the ascension of uropathogens from the perineum, through the urethra, and into the bladder. The female urethra is shorter than the male's, which is a key anatomical reason why UTIs are far more common in women. The most common causative organism is <em>E. coli</em>, which is a normal inhabitant of the gastrointestinal tract.</p>",
+    "patho_q2": "<p><strong>Symptom Pathophysiology: Inflammatory Response.</strong> The symptoms of urgency and frequency are not caused by an increase in urine production, but by the body's inflammatory response to the bacterial invasion of the bladder's inner lining (the urothelium). This inflammation makes the bladder wall hypersensitive. The stretch receptors in the bladder wall are triggered, sending signals to the brain that the bladder is full, even when it contains only a small amount of urine. This creates the constant sensation of needing to void.</p>",
+    "complication_q1": "<p><strong>Complication: Pyelonephritis.</strong> If a bladder infection is not effectively treated, the bacteria can continue their ascent up the urinary tract via the ureters into the kidneys. An infection of the kidney parenchyma is called pyelonephritis, which is a much more serious condition (a complicated UTI) that often presents with fever, flank pain, and systemic symptoms and may require more aggressive antibiotic therapy.</p>",
+    "culture_q1": "<p><strong>Role of Urine Culture: Confirmation and Surveillance.</strong> In an uncomplicated case like Susan's, the urine culture serves primarily to confirm the clinical diagnosis and the causative organism. For a first-time, uncomplicated cystitis, treatment is often started empirically based on the high probability of an <em>E. coli</em> infection. The culture result confirms this assumption. It becomes critically important if the patient does not respond to initial therapy, as the culture provides sensitivity data to guide the selection of a more effective antibiotic.</p>"
+  }
+}

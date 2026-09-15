@@ -1,0 +1,200 @@
+{
+  "susan": {
+    "disclaimer": "This clinical simulation was developed with the assistance of Google Gemini.",
+    "patient": { "name": "Susan", "age": 42, "mrn": "84350" },
+    "masterLabData": {
+      "ua": { 
+        "name": "Complete Urinalysis with Microscopy", 
+        "results": [ 
+          { "test": "Color", "value": "Yellow", "ref": "" }, 
+          { "test": "Clarity", "value": "Cloudy", "ref": "Clear", "flag": "high" }, 
+          { "test": "Specific Gravity", "value": "1.022", "ref": "1.005-1.030" }, 
+          { "test": "pH", "value": "6.5", "ref": "5.0-8.0" }, 
+          { "test": "Leukocyte Esterase", "value": "Positive", "ref": "Negative", "flag": "high" }, 
+          { "test": "Nitrite", "value": "Positive", "ref": "Negative", "flag": "high" }, 
+          { "test": "Blood", "value": "Trace", "ref": "Negative", "flag": "high" }, 
+          { "test": "WBCs (Micro)", "value": "15-20 /hpf", "ref": "0-5 /hpf", "flag": "high" }, 
+          { "test": "Bacteria", "value": "Many", "ref": "None", "flag": "high" } 
+        ] 
+      },
+      "hcg": { "name": "Urine hCG", "results": [{ "test": "Pregnancy Test", "value": "Negative", "ref": "Negative" }] },
+      "vaginal_swab": { 
+        "name": "Vaginal Wet Mount / KOH", 
+        "results": [
+          { "test": "Clue Cells", "value": "None seen", "ref": "None" },
+          { "test": "Yeast/Hyphae", "value": "None seen", "ref": "None" },
+          { "test": "Trichomonas", "value": "None seen", "ref": "None" }
+        ] 
+      },
+      "sti_naat": {
+        "name": "Comprehensive STI NAAT",
+        "results": [
+          { "test": "Chlamydia trachomatis", "value": "Not Detected", "ref": "Not Detected" },
+          { "test": "Neisseria gonorrhoeae", "value": "Not Detected", "ref": "Not Detected" },
+          { "test": "Mycoplasma genitalium", "value": "Not Detected", "ref": "Not Detected" }
+        ]
+      },
+      "cbc": { "name": "Complete Blood Count (CBC)", "results": [{ "test": "WBC Count", "value": "8.2 x10^9/L", "ref": "4.0-11.0 x10^9/L" }] },
+      "cmp": { "name": "Comprehensive Metabolic Panel (CMP)", "results": [{ "test": "Creatinine", "value": "0.8 mg/dL", "ref": "0.6-1.2 mg/dL" }] },
+      "crp_esr": { "name": "Inflammatory Markers", "results": [{ "test": "CRP", "value": "2.1 mg/L", "ref": "< 3.0 mg/L" }, { "test": "ESR", "value": "12 mm/hr", "ref": "< 20 mm/hr" }] },
+      "a1c": { "name": "Hemoglobin A1c", "results": [{ "test": "HbA1c", "value": "5.4%", "ref": "< 5.7%" }] },
+      "blood_cx": { "name": "Blood Cultures (x2)", "results": [{ "test": "Result (48hrs)", "value": "No growth to date", "ref": "No growth" }] },
+      "renal_us": { "name": "Renal Ultrasound", "results": [{ "test": "Findings", "value": "Bilateral kidneys are normal. No hydronephrosis.", "ref": "Normal" }] },
+      "ct_ap": { "name": "CT Abdomen/Pelvis w/o Contrast", "results": [{ "test": "Findings", "value": "Mild bladder wall thickening consistent with cystitis.", "ref": "Normal" }] }
+    },
+    "scenes": {
+      "start": { "title": "Patient Presentation", "narrative": "Susan, a 42-year-old female, presents to your clinic with painful and frequent urination.", "onSubmit": "gather_history" },
+      "gather_history": { 
+        "title": "Comprehensive History", "isSataScreen": true, "narrative": "Select all the historical components you would like to elicit.", 
+        "sataOptions": { 
+          "onset": { "label": "Onset (O)", "finding": "Symptoms started abruptly two days ago." }, 
+          "characteristics": { "label": "Characteristics (C)", "finding": "'Burning' sensation when voiding. Constant urge to pee, cloudy urine." },
+          "associated_sx": { "label": "Associated Symptoms", "finding": "Denies fever, chills, flank pain, or vaginal discharge." },
+          "pmh": { "label": "Past Medical History (PMH)", "finding": "No chronic conditions." },
+          "menstrual_hx": { "label": "Menstrual History", "finding": "LMP 4 weeks ago. Regular 28-day periods." },
+          "sexual_hx": { "label": "Sexual History", "finding": "Sexually active. One new male partner within the last week." }
+        }, 
+        "onSubmit": "post_history_decision" 
+      },
+      "post_history_decision": { "title": "Next Steps", "narrative": "History gathered.", "decision": { "prompt": "What next?", "choices": [{ "text": "Conduct a physical exam.", "path": "physical_exam_selection" }, { "text": "Order diagnostic tests.", "path": "prompt_to_order" }] } },
+      "physical_exam_selection": { 
+        "title": "Physical Examination", "isSataScreen": true, "narrative": "Select the exam components.", 
+        "sataOptions": { 
+          "vitals": { "label": "Vital Signs", "finding": "T: 98.6°F, BP: 116/74, HR: 64." }, 
+          "abdominal": { "label": "Abdominal", "finding": "Soft, non-distended. Mild suprapubic tenderness." }, 
+          "cvat": { "label": "Costovertebral Angle (CVA)", "finding": "No CVA tenderness bilaterally." },
+          "pelvic": { "label": "Pelvic", "finding": "Normal genitalia. No abnormal discharge or cervical motion tenderness." }
+        }, 
+        "onSubmit": "post_exam_decision" 
+      },
+      "post_exam_decision": { "title": "Next Steps", "narrative": "Exam complete.", "decision": { "prompt": "What next?", "choices": [{ "text": "Order diagnostic tests.", "path": "prompt_to_order" }] } },
+      "prompt_to_order": { "title": "Place Orders", "narrative": "Navigate to the 'Orders' tab.", "onEnter": "enableOrders" },
+      "decision_labs": { 
+        "title": "Placing Orders", "isOrderScreen": true, "narrative": "Select diagnostic tests.", 
+        "orderSets": { 
+          "Urine & Vaginal": [{ "id": "ua", "label": "Urinalysis w/ Reflex to Culture" }, { "id": "hcg", "label": "Urine hCG" }, { "id": "vaginal_swab", "label": "Vaginal Wet Mount" }, { "id": "sti_naat", "label": "Comprehensive STI NAAT" }], 
+          "Blood Studies": [{ "id": "cbc", "label": "CBC" }, { "id": "cmp", "label": "CMP" }, { "id": "crp_esr", "label": "CRP/ESR" }, { "id": "a1c", "label": "Hemoglobin A1c" }, { "id": "blood_cx", "label": "Blood Cultures" }], 
+          "Imaging": [{ "id": "renal_us", "label": "Renal Ultrasound" }, { "id": "ct_ap", "label": "CT Abdomen/Pelvis" }] 
+        }, 
+        "onSubmit": "results_pending" 
+      },
+      "results_pending": { 
+        "title": "Results Pending", "narrative": "Orders have been resulted. Review the 'Lab Results' tab.", 
+        "onEnter": "populateResults", 
+        "decision": { "prompt": "What is your next step?", "choices": [{ "text": "Proceed to Differential Diagnosis.", "path": "select_ddx" }, { "text": "Order additional diagnostic tests.", "path": "decision_labs" }] } 
+      },
+      "select_ddx": { 
+        "title": "Differential Diagnosis", "isDdxScreen": true, "prompt": "Select the most likely leading diagnosis.", 
+        "ddxOptions": ["Acute Simple Cystitis", "Pyelonephritis", "Pelvic Inflammatory Disease (PID)", "Bacterial Vaginosis"], 
+        "correctAnswer": "Acute Simple Cystitis", "onSubmit": "patho_q1" 
+      },
+      "patho_q1": { 
+        "title": "Knowledge Check 1: Pathophysiology", "narrative": "You diagnosed Acute Simple Cystitis. Her cloudy urine and positive nitrites strongly support a bacterial etiology.", "decision": { "prompt": "What is the most common pathophysiologic mechanism for this condition?", "choices": [{ "text": "An ascending infection from periurethral/fecal flora.", "path": "patho_q2", "isCorrect": true }, { "text": "Hematogenous (bloodborne) spread.", "path": "patho_q2" }] } 
+      },
+      "patho_q2": { 
+        "title": "Knowledge Check 2: Symptomatology", "narrative": "Understanding that pathogens ascend the urethra is key to proper hygiene counseling.", "decision": { "prompt": "Susan's urgency and frequency are primarily caused by:", "choices": [{ "text": "Inflammation of the urothelium irritating stretch receptors.", "path": "patho_q3", "isCorrect": true }, { "text": "Increased urine production to flush the infection.", "path": "patho_q3" }] } 
+      },
+      "patho_q3": { 
+        "title": "Knowledge Check 3: Complications", "narrative": "Because the stretch receptors are irritated, she constantly feels full despite low volumes.", "decision": { "prompt": "If untreated, this ascending infection most commonly leads to:", "choices": [{ "text": "Pyelonephritis.", "path": "patho_q4", "isCorrect": true }, { "text": "Glomerulonephritis.", "path": "patho_q4" }] } 
+      },
+      "patho_q4": { 
+        "title": "Knowledge Check 4: Diagnostic Markers", "narrative": "Preventing pyelonephritis requires timely intervention.", "decision": { "prompt": "Which urinalysis finding is highly specific for Enterobacteriaceae (like E. coli) over other pathogens?", "choices": [{ "text": "Positive Nitrites.", "path": "patho_q5", "isCorrect": true }, { "text": "Positive Leukocyte Esterase.", "path": "patho_q5" }] } 
+      },
+      "patho_q5": { 
+        "title": "Knowledge Check 5: Treatment", "narrative": "Nitrite positivity confirms the presence of nitrate-reducing bacteria like E. coli.", "decision": { "prompt": "When selecting first-line empiric therapy (e.g., Nitrofurantoin), what is its primary mechanism of action?", "choices": [{ "text": "Damages bacterial DNA and ribosomal proteins.", "path": "end", "isCorrect": true }, { "text": "Inhibits cell wall synthesis.", "path": "end" }] } 
+      },
+      "end": { "isEnd": true, "title": "Case Complete: Final Feedback" }
+    },
+    "rationales": { 
+      "Diagnosis": "<p><strong>Acute Simple Cystitis:</strong> Localized lower tract symptoms with normal vitals and no CVA tenderness.</p>",
+      "Patho_1": "<p><strong>Ascending Infection:</strong> Most UTIs are caused by fecal flora ascending the short female urethra.</p>",
+      "Patho_2": "<p><strong>Symptomatology:</strong> Mucosal inflammation lowers the firing threshold of detrusor stretch receptors.</p>",
+      "Patho_3": "<p><strong>Complications:</strong> Unchecked ascending infections travel up the ureters to cause pyelonephritis.</p>",
+      "Patho_4": "<p><strong>Nitrites:</strong> E. coli converts urinary nitrates to nitrites. Leukocyte esterase just indicates WBC presence (inflammation).</p>",
+      "Patho_5": "<p><strong>Nitrofurantoin:</strong> It is reduced by bacterial flavoproteins to reactive intermediates that damage DNA/RNA.</p>"
+    }
+  },
+  "liam": {
+    "disclaimer": "This clinical simulation was developed with the assistance of Google Gemini.",
+    "patient": { "name": "Liam", "age": 9, "mrn": "99210" },
+    "masterLabData": {
+      "ua": { 
+        "name": "Urinalysis with Microscopy", 
+        "results": [ 
+          { "test": "Color", "value": "Macro Smoky / Cola", "ref": "Yellow", "flag": "high" }, 
+          { "test": "Protein", "value": "3+", "ref": "Negative", "flag": "high" }, 
+          { "test": "RBCs", "value": "Positive", "ref": "0-4 /hpf", "flag": "high" }, 
+          { "test": "Casts", "value": "RBC Casts Present", "ref": "None", "flag": "high" } 
+        ] 
+      },
+      "urine_chem": { "name": "24-Hour Urine", "results": [{ "test": "Urine Na", "value": "20 mg/24 hr", "ref": "43-217 mg/24 hr", "flag": "low" }] },
+      "strep_abs": { "name": "Strep Antibodies", "results": [{ "test": "ASO Titer", "value": "Elevated (600 IU/mL)", "ref": "< 200 IU/mL", "flag": "high" }] },
+      "complement": { "name": "Serum Complement", "results": [{ "test": "C3", "value": "Low (45 mg/dL)", "ref": "80-160 mg/dL", "flag": "low" }] },
+      "cmp": { "name": "CMP", "results": [{ "test": "BUN", "value": "28 mg/dL", "ref": "7-20 mg/dL", "flag": "high" }, { "test": "Creatinine", "value": "1.4 mg/dL", "ref": "0.5-1.0 mg/dL", "flag": "high" }] },
+      "throat_cx": { "name": "Throat Culture", "results": [{ "test": "Result", "value": "Negative for Group A Strep (current)", "ref": "Negative" }] },
+      "ana_anca": { "name": "Autoimmune Panel", "results": [{ "test": "ANA", "value": "Negative", "ref": "Negative" }, { "test": "ANCA", "value": "Negative", "ref": "Negative" }] }
+    },
+    "scenes": {
+      "start": { "title": "ED Presentation", "narrative": "Liam, 9, presents with facial puffiness and bloody urine.", "onSubmit": "gather_history" },
+      "gather_history": { 
+        "title": "History", "isSataScreen": true, "narrative": "Select questions.", 
+        "sataOptions": { 
+          "recent_illness": { "label": "Recent illness?", "finding": "Sore throat 10 days ago." }, 
+          "urine_changes": { "label": "Urine changes?", "finding": "Bloody, cola-colored for 24 hours. Oliguria noted." }
+        }, "onSubmit": "post_history_decision" 
+      },
+      "post_history_decision": { "title": "Next Steps", "narrative": "History gathered.", "decision": { "prompt": "Next?", "choices": [{ "text": "Physical exam.", "path": "physical_exam_selection" }, { "text": "Orders.", "path": "prompt_to_order" }] } },
+      "physical_exam_selection": { 
+        "title": "Exam", "isSataScreen": true, "narrative": "Select exam components.", 
+        "sataOptions": { 
+          "vitals": { "label": "Vitals", "finding": "BP: 135/85 (Hypertensive)." }, 
+          "heent": { "label": "HEENT", "finding": "Periorbital edema." },
+          "gu": { "label": "Genitourinary", "finding": "Scrotal edema." }
+        }, "onSubmit": "post_exam_decision" 
+      },
+      "post_exam_decision": { "title": "Next Steps", "narrative": "Exam shows hypertension and edema.", "decision": { "prompt": "Next?", "choices": [{ "text": "Orders.", "path": "prompt_to_order" }] } },
+      "prompt_to_order": { "title": "Place Orders", "narrative": "Navigate to 'Orders'.", "onEnter": "enableOrders" },
+      "decision_labs": { 
+        "title": "Placing Orders", "isOrderScreen": true, "narrative": "Select tests.", 
+        "orderSets": { 
+          "Urine": [{ "id": "ua", "label": "Urinalysis" }, { "id": "urine_chem", "label": "24-Hr Urine Sodium" }], 
+          "Blood": [{ "id": "cmp", "label": "CMP" }, { "id": "strep_abs", "label": "ASO Titer" }, { "id": "complement", "label": "C3/C4 Complement" }, { "id": "ana_anca", "label": "ANA/ANCA" }],
+          "Microbiology": [{ "id": "throat_cx", "label": "Throat Culture" }]
+        }, "onSubmit": "results_pending" 
+      },
+      "results_pending": { 
+        "title": "Results Pending", "narrative": "Results are back.", 
+        "onEnter": "populateResults", 
+        "decision": { "prompt": "Next step?", "choices": [{ "text": "Proceed to Differential Diagnosis.", "path": "select_ddx" }, { "text": "Order additional tests.", "path": "decision_labs" }] } 
+      },
+      "select_ddx": { 
+        "title": "Differential Diagnosis", "isDdxScreen": true, "prompt": "Select diagnosis based on elevated ASO, low C3, and edema.", 
+        "ddxOptions": ["Nephrotic Syndrome", "Rheumatic fever", "Glomerulonephritis", "IgA Nephropathy"], 
+        "correctAnswer": "Glomerulonephritis", "onSubmit": "patho_q1" 
+      },
+      "patho_q1": { 
+        "title": "Knowledge Check 1: Edema", "narrative": "You correctly diagnosed Post-Streptococcal Glomerulonephritis.", "decision": { "prompt": "What primarily drives his periorbital and scrotal edema?", "choices": [{ "text": "Sodium/water retention due to decreased GFR.", "path": "patho_q2", "isCorrect": true }, { "text": "Severe hypoalbuminemia.", "path": "patho_q2" }] } 
+      },
+      "patho_q2": { 
+        "title": "Knowledge Check 2: Immunology", "narrative": "Unlike Nephrotic Syndrome, his edema is driven by poor filtration and retention.", "decision": { "prompt": "What is the pathophysiological basis for his low C3 complement?", "choices": [{ "text": "Consumption by immune complexes depositing in the glomeruli.", "path": "patho_q3", "isCorrect": true }, { "text": "Urinary loss of C3.", "path": "patho_q3" }] } 
+      },
+      "patho_q3": { 
+        "title": "Knowledge Check 3: Urinalysis", "narrative": "The immune complex deposition confirms this as a Type III hypersensitivity reaction.", "decision": { "prompt": "What is the specific clinical significance of finding RBC Casts?", "choices": [{ "text": "Proves hematuria is of glomerular origin.", "path": "patho_q4", "isCorrect": true }, { "text": "Indicates lower urinary tract bleeding.", "path": "patho_q4" }] } 
+      },
+      "patho_q4": { 
+        "title": "Knowledge Check 4: Hemodynamics", "narrative": "RBC casts form when cells squeeze through the damaged glomerular basement membrane.", "decision": { "prompt": "What is the primary cause of his acute hypertension?", "choices": [{ "text": "Intravascular volume expansion.", "path": "patho_q5", "isCorrect": true }, { "text": "Renin-angiotensin-aldosterone system (RAAS) overactivation.", "path": "patho_q5" }] } 
+      },
+      "patho_q5": { 
+        "title": "Knowledge Check 5: Prognosis", "narrative": "Volume expansion from oliguria drives the blood pressure spike.", "decision": { "prompt": "What key pathological feature distinguishes chronic progression from acute resolution?", "choices": [{ "text": "Irreversible glomerular scarring (glomerulosclerosis).", "path": "end", "isCorrect": true }, { "text": "Persistent ASO elevation.", "path": "end" }] } 
+      },
+      "end": { "isEnd": true, "title": "Case Complete: Final Feedback" }
+    },
+    "rationales": { 
+      "Patho_1": "<p><strong>Edema:</strong> Drops in GFR cause primary sodium retention, increasing hydrostatic pressure.</p>",
+      "Patho_2": "<p><strong>Low C3:</strong> Consumed by the alternative pathway activated by immune complexes.</p>",
+      "Patho_3": "<p><strong>RBC Casts:</strong> Hallmarks of glomerular damage; RBCs get trapped in Tamm-Horsfall mucoprotein.</p>",
+      "Patho_4": "<p><strong>Hypertension:</strong> Driven by fluid overload (hypervolemia) secondary to oliguria.</p>",
+      "Patho_5": "<p><strong>Chronicity:</strong> Most kids recover fully; chronic disease is marked by permanent scarring.</p>"
+    }
+  }
+}

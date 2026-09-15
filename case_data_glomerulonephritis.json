@@ -1,0 +1,170 @@
+{
+  "disclaimer": "This clinical simulation was developed with the assistance of Google Gemini.",
+  "patient": {
+    "name": "Liam",
+    "age": 9,
+    "mrn": "MRN99210"
+  },
+  "masterLabData": {
+    "ua": {
+      "name": "Urinalysis with Microscopy",
+      "results": [
+        { "test": "Color", "value": "Macro Smoky / Cola-colored", "ref": "Yellow/Clear", "flag": "high" },
+        { "test": "Protein", "value": "3+", "ref": "Negative", "flag": "high" },
+        { "test": "Blood", "value": "Positive", "ref": "Negative", "flag": "high" },
+        { "test": "WBCs (Microscopic)", "value": "Numerous", "ref": "0-5 /hpf", "flag": "high" },
+        { "test": "RBCs (Microscopic)", "value": "Positive", "ref": "0-4 /hpf", "flag": "high" },
+        { "test": "Casts", "value": "Present (RBC & WBC Casts)", "ref": "None", "flag": "high" },
+        { "test": "Urine Sodium", "value": "20 mg/24 hr", "ref": "43-217 mg/24 hr", "flag": "low" }
+      ]
+    },
+    "strep_labs": {
+      "name": "Streptococcal Antibodies & Complement",
+      "results": [
+        { "test": "Antistreptolysin-O (ASO) Titer", "value": "Elevated (400 Todd units)", "ref": "< 160 Todd units", "flag": "high" },
+        { "test": "C3 Complement", "value": "Low (45 mg/dL)", "ref": "80-160 mg/dL", "flag": "low" }
+      ]
+    },
+    "cmp": {
+      "name": "Comprehensive Metabolic Panel (CMP)",
+      "results": [
+        { "test": "Sodium", "value": "136 mmol/L", "ref": "136-145 mmol/L" },
+        { "test": "Potassium", "value": "4.8 mmol/L", "ref": "3.5-5.1 mmol/L" },
+        { "test": "BUN", "value": "28 mg/dL", "ref": "7-20 mg/dL", "flag": "high" },
+        { "test": "Creatinine", "value": "1.3 mg/dL", "ref": "0.5-1.0 mg/dL", "flag": "high" }
+      ]
+    }
+  },
+  "scenes": {
+    "start": {
+      "title": "Patient Presentation",
+      "narrative": "Liam, a 9-year-old boy, is brought into the ED by his parents. They report he has been experiencing facial swelling and a change in his urine.",
+      "onSubmit": "gather_history"
+    },
+    "gather_history": {
+      "title": "History of Present Illness",
+      "isSataScreen": true,
+      "narrative": "You begin to take a more detailed history. Select all the questions you would like to ask Liam's parents.",
+      "sataOptions": {
+        "recent_illness": { "label": "Has Liam been sick recently?", "finding": "He complained of a severe sore throat about 10 days ago, which resolved on its own." },
+        "swelling_onset": { "label": "When did you first notice the swelling, and where is it?", "finding": "They noticed puffiness in his face and eyes this morning, and also noted some scrotal swelling." },
+        "urine_changes": { "label": "Can you describe the changes in his urine?", "finding": "His urine has been bloody and looks like 'cola' for the past 24 hours. He also seems to be urinating less frequently (oliguria)." },
+        "other_symptoms": { "label": "Has he had joint pain, rashes, or fevers recently?", "finding": "No current fevers, joint pain, or rashes." }
+      },
+      "onSubmit": "post_history_decision"
+    },
+    "post_history_decision": {
+      "title": "Next Steps",
+      "narrative": "You have gathered the initial history.",
+      "decision": {
+        "prompt": "What would you like to do next?",
+        "choices": [
+          { "text": "Conduct a physical exam.", "path": "physical_exam_selection" },
+          { "text": "Order diagnostic tests.", "path": "prompt_to_order" }
+        ]
+      }
+    },
+    "physical_exam_selection": {
+      "title": "Physical Examination",
+      "isSataScreen": true,
+      "narrative": "Select the components of the physical exam you wish to perform.",
+      "sataOptions": {
+        "vitals": { "label": "Check Vital Signs", "finding": "T: 98.8°F, BP: 135/85 (Elevated for age), HR: 90, RR: 18." },
+        "heent": { "label": "HEENT Assessment", "finding": "Significant periorbital edema is noted. Pharynx is currently clear without exudate." },
+        "gu_exam": { "label": "Genitourinary Assessment", "finding": "Scrotal edema is present." },
+        "cardio_pulm": { "label": "Cardiopulmonary Exam", "finding": "Lungs are clear. Regular rate and rhythm, no murmurs. Mild fluid overload suspected based on elevated BP." }
+      },
+      "onSubmit": "prompt_to_order"
+    },
+    "prompt_to_order": {
+      "title": "Place Orders",
+      "narrative": "You have decided to order diagnostic tests. Please navigate to the 'Orders' tab to place the appropriate lab orders for this patient.",
+      "onEnter": "enableOrders"
+    },
+    "decision_labs": {
+      "title": "Placing Orders",
+      "isOrderScreen": true,
+      "narrative": "Select the diagnostic tests for Liam's presentation.",
+      "orderSets": {
+        "Urine Studies": [
+          { "id": "ua", "label": "Urinalysis with Microscopy & 24hr Urine Sodium" }
+        ],
+        "Blood Studies": [
+          { "id": "cmp", "label": "Comprehensive Metabolic Panel (CMP)" },
+          { "id": "strep_labs", "label": "ASO Titer & C3 Complement" }
+        ]
+      },
+      "onSubmit": "results_pending"
+    },
+    "results_pending": {
+      "title": "Results Pending",
+      "narrative": "The orders have been placed. Results are now available.",
+      "decision": {
+        "prompt": "Lab results are now available. Please review them in the 'Lab Results' tab and then select your leading diagnosis.",
+        "choices": [
+          { "text": "Proceed to select Differential Diagnosis.", "path": "select_ddx" }
+        ]
+      }
+    },
+    "select_ddx": {
+      "title": "Differential Diagnosis",
+      "isDdxScreen": true,
+      "prompt": "Based on the recent sore throat, periorbital edema, cola-colored urine, and specific lab findings, select the most likely diagnosis.",
+      "ddxOptions": [
+        "Nephrotic Syndrome",
+        "Rapidly Progressive Glomerulonephritis",
+        "Rheumatic fever",
+        "Impaired liver function / Mononucleosis",
+        "Acute Glomerulonephritis"
+      ],
+      "correctAnswer": "Acute Glomerulonephritis",
+      "onSubmit": "patho_q1"
+    },
+    "patho_q1": {
+      "title": "Pathophysiology Question 1",
+      "narrative": "You have correctly identified Acute Glomerulonephritis.",
+      "decision": {
+        "prompt": "What is the primary underlying pathophysiology causing the oliguria, edema, and elevated blood pressure in this patient?",
+        "choices": [
+          { "text": "Severe hypoalbuminemia leading to fluid shifting into the interstitial space.", "path": "patho_q2" },
+          { "text": "Sodium and water retention directly resulting from decreased glomerular filtration.", "path": "patho_q2", "isCorrect": true },
+          { "text": "Direct bacterial invasion of the renal parenchyma causing acute inflammation.", "path": "patho_q2" }
+        ]
+      }
+    },
+    "patho_q2": {
+      "title": "Pathophysiology Question 2",
+      "narrative": "Correct. The inflammation reduces the glomerular filtration rate, leading to sodium and water retention.",
+      "decision": {
+        "prompt": "The patient's lab results show a low serum C3 complement. What explains this finding in post-streptococcal glomerulonephritis?",
+        "choices": [
+          { "text": "C3 is lost heavily in the urine along with the 3+ protein.", "path": "complication_q1" },
+          { "text": "The liver temporarily stops producing C3 due to the systemic inflammatory response.", "path": "complication_q1" },
+          { "text": "C3 is consumed as immune complexes deposit in the glomeruli and activate the complement cascade.", "path": "complication_q1", "isCorrect": true }
+        ]
+      }
+    },
+    "complication_q1": {
+      "title": "Complications",
+      "narrative": "Excellent. The immune complexes trigger the complement cascade, consuming C3.",
+      "decision": {
+        "prompt": "While acute post-streptococcal glomerulonephritis generally has a good prognosis in children, what is the key concern if inflammation becomes chronic?",
+        "choices": [
+          { "text": "Development of permanent renal scarring.", "path": "end", "isCorrect": true },
+          { "text": "Progression to rheumatic heart disease.", "path": "end" },
+          { "text": "Chronic, lifelong recurrent streptococcal infections.", "path": "end" }
+        ]
+      }
+    },
+    "end": {
+      "isEnd": true,
+      "title": "Case Complete: Final Feedback"
+    }
+  },
+  "rationales": {
+    "select_ddx": "<p><strong>Diagnosis: Acute Glomerulonephritis.</strong> The presentation of periorbital and scrotal edema 10-14 days after a sore throat, combined with oliguria, hypertension, and macro smoky (cola-colored) urine highly suggests acute post-streptococcal glomerulonephritis (APSGN). The elevated ASO titer confirms recent strep infection, and low C3 is classic for this disease.</p><ul><li><strong>Nephrotic Syndrome:</strong> Typically presents with massive proteinuria (>3.5g/day) and severe edema, but lacks the gross hematuria (cola urine) and low C3 seen here.</li><li><strong>Rheumatic Fever:</strong> Also follows strep infections but presents with joint pain, carditis, nodules, and erythema marginatum, not acute renal failure.</li></ul>",
+    "patho_q1": "<p><strong>Pathogenesis of Edema:</strong> In acute glomerulonephritis, immune complex deposition causes glomerular inflammation. This sharply decreases the Glomerular Filtration Rate (GFR). The kidneys respond by retaining sodium and water, which expands the intravascular volume, leading directly to hypertension and edema (particularly periorbital and scrotal).</p>",
+    "patho_q2": "<p><strong>Complement Consumption:</strong> APSGN is an immune-complex mediated disease (Type III hypersensitivity). Antibodies formed against the streptococcal antigens bind to those antigens and get trapped in the glomerular basement membrane. This activates the classical complement pathway, which heavily 'consumes' C3, leading to low serum levels during the acute phase.</p>",
+    "complication_q1": "<p><strong>Chronic Complications:</strong> While most pediatric patients recover fully with supportive care, prolonged or severe inflammation in the glomeruli can lead to irreversible nephron damage. The key differentiator between acute recovery and chronic kidney disease in nephritis is the development of permanent renal scarring.</p>"
+  }
+}
